@@ -1,0 +1,171 @@
+Messing about with MongoDB
+
+--> Without an index:
+
+db.NationalFile.find({FEATURE_CLASS:"Summit", ELEV_IN_FT:{$gte:14000}}, {FEATURE_NAME:true, ELEV_IN_FT:true, STATE_ALPHA:true}).sort({ELEV_IN_FT:-1}).explain()
+
+{
+	"cursor" : "BasicCursor",
+	"nscanned" : 2183267,
+	"nscannedObjects" : 2183267,
+	"n" : 82,
+	"scanAndOrder" : true,
+	"millis" : 2322,
+	"nYields" : 0,
+	"nChunkSkips" : 0,
+	"isMultiKey" : false,
+	"indexOnly" : false,
+	"indexBounds" : {
+		
+	}
+}
+
+
+--> With index:
+
+> db.NationalFile.ensureIndex({ELEV_IN_FT:1});                                                  
+<, {FEATURE_NAME:true, ELEV_IN_FT:true, STATE_ALPHA:true} ).sort( {ELEV_IN_FT : -1} ).explain();
+{
+	"cursor" : "BtreeCursor ELEV_IN_FT_1 reverse",
+	"nscanned" : 106,
+	"nscannedObjects" : 106,
+	"n" : 82,
+	"millis" : 352,
+	"nYields" : 0,
+	"nChunkSkips" : 0,
+	"isMultiKey" : false,
+	"indexOnly" : false,
+	"indexBounds" : {
+		"ELEV_IN_FT" : [
+			[
+				1.7976931348623157e+308,
+				14000
+			]
+		]
+	}
+}
+
+And in cache:
+
+<ELEV_IN_FT:true, STATE_ALPHA:true} ).sort( {ELEV_IN_FT : -1} ).explain();
+{
+	"cursor" : "BtreeCursor ELEV_IN_FT_1 reverse",
+	"nscanned" : 106,
+	"nscannedObjects" : 106,
+	"n" : 82,
+	"millis" : 1,
+	"nYields" : 0,
+	"nChunkSkips" : 0,
+	"isMultiKey" : false,
+	"indexOnly" : false,
+	"indexBounds" : {
+		"ELEV_IN_FT" : [
+			[
+				1.7976931348623157e+308,
+				14000
+			]
+		]
+	}
+}
+
+--> Comparison with Postgis:
+
+- First of all, getting data loaded into Postgis was rather more of a chore than I would have liked.  I couldn't use my favorite method of loading the CSV file into QGis and then exporting into a shapefile, then creating a SQL insert file using shp2pgsql.  Nope, couldn't do that because QGis blew up when I tried to load 2 million points into it.  So I ended up creating a SQL creation statement for the table, then piping a tab delimited data file int a COPY statement.  Pain in the ass.
+
+--> works:
+gnis=> \copy gnis FROM '/home/randre/gis_data/gnis/pg_load_file.csv' WITH NULL AS '' DELIMITER AS '|'
+
+gnis=> explain analyze select feature_name, state_alpha, elev_in_ft from gnis where feature_class = 'Summit' and elev_in_ft > 14000 order by elev_in_ft desc;
+                                                 QUERY PLAN                                                  
+-------------------------------------------------------------------------------------------------------------
+ Sort  (cost=68092.17..68092.18 rows=5 width=28) (actual time=699.615..699.678 rows=82 loops=1)
+   Sort Key: elev_in_ft
+   Sort Method:  quicksort  Memory: 31kB
+   ->  Seq Scan on gnis  (cost=0.00..68092.11 rows=5 width=28) (actual time=52.386..699.382 rows=82 loops=1)
+         Filter: ((elev_in_ft > 14000::numeric) AND ((feature_class)::text = 'Summit'::text))
+ Total runtime: 699.782 ms
+(6 rows)
+
+With index:
+
+ Sort  (cost=604.69..604.70 rows=5 width=28) (actual time=2.300..2.386 rows=82 loops=1)
+   Sort Key: elev_in_ft
+   Sort Method:  quicksort  Memory: 31kB
+   ->  Bitmap Heap Scan on gnis  (cost=5.67..604.63 rows=5 width=28) (actual time=0.393..2.008 r
+ows=82 loops=1)
+         Recheck Cond: (elev_in_ft > 14000::numeric)
+         Filter: ((feature_class)::text = 'Summit'::text)
+         ->  Bitmap Index Scan on elev_idx  (cost=0.00..5.67 rows=157 width=0) (actual time=0.31
+7..0.317 rows=106 loops=1)
+               Index Cond: (elev_in_ft > 14000::numeric)
+ Total runtime: 2.527 ms
+(9 rows)
+
+-------------------
+Sunday July 3, 2011:
+
+- Wanted to do some speed tests with mongo and seem to have lost the database I had setup previously.  Not sure how, but figure I'd better document the setup this time.
+
+1. Create location for db to live in:
+$  sudo mkdir -p /usr/local/mongodb/db
+$  sudo chown `id -u` /usr/local/mongodb/db/
+
+2. (In poking around I found my previously created db under /var/lib/mongodb. I copied all files over to location under /usr/local and ran "repair" option.)
+$ mongod --dbpath /usr/local/mongodb/db/ --repair
+
+3. Start mongo in foreground and pointed at db location:
+$ mongod --dbpath /usr/local/mongodb/db/
+
+4. Show db's:
+> show dbs
+admin	(empty)
+gnis	3.9521484375GB
+local	(empty)
+test	0.203125GB
+
+5. Switch to using 'gnis' db:
+> use gnis
+switched to db gnis
+
+6. Show collections (tables):
+> show collections
+NationalFile
+system.indexes
+
+7. Startup mongo as daemon (after some prep work)
+$ sudo mkdir /usr/local/mongodb/log
+$ sudo chown `id -u` /usr/local/mongodb/log/
+$ mongod --fork --dbpath /usr/local/mongodb/db/ --logpath /usr/local/mongodb/log/mongodb.log --logappend
+forked process: 3018
+all output going to: /usr/local/mongodb/log/mongodb.log
+
+8. Create 'start_mongodb' alias in .bashrc:
+alias start_mongodb='mongod --fork --dbpath /usr/local/mongodb/db/ --logpath /usr/local/mongodb/log/mongodb.log --logappend'
+
+9. Shutdown server from mongo shell:
+> use admin
+switched to db admin
+> db.shutdownServer()
+
+----------------------
+Mon July 4, 2011:
+
+- How to execute a query from command line non-interactively:
+$ time mongo gnis --eval "db.NationalFile.find().count();"
+
+NOTE:  This works with "count", but if you actually want records, you need to iterate over the cursor.
+
+-----------------------
+Tue July 5, 2011:
+
+- Som interesting bits today.  Installed PyMongo and made some queries.  Nice, simple syntax that follows the mongo shell query sysntax nicely.  One new thing I encountered was the 'u' indincating a unicode response.
+
+Evidently in Python 3 the 'u' will go away, as everything will be in unicode.  Until then though, it's possible to remove it by doing the following.
+from __future__ import unicode_literals
+
+
+
+
+
+
+
