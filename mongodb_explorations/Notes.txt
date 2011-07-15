@@ -158,14 +158,125 @@ NOTE:  This works with "count", but if you actually want records, you need to it
 -----------------------
 Tue July 5, 2011:
 
-- Som interesting bits today.  Installed PyMongo and made some queries.  Nice, simple syntax that follows the mongo shell query sysntax nicely.  One new thing I encountered was the 'u' indincating a unicode response.
+- Some interesting bits today.  Installed PyMongo and made some queries.  Nice, simple syntax that follows the mongo shell query sysntax nicely.  One new thing I encountered was the 'u' indincating a unicode response.  Evidently in Python 3 the 'u' will go away, as everything will be in unicode.  Until then though, it's possible to remove it by doing the following.
 
-Evidently in Python 3 the 'u' will go away, as everything will be in unicode.  Until then though, it's possible to remove it by doing the following.
-from __future__ import unicode_literals
+  from __future__ import unicode_literals
+
+Time to unittest this.
+
+------------------------
+Wed July 13, 2011:
+
+- Ok, want to see what sort of request Polymaps makes when requesting JSON tiles.  Set map API to:
+        .center({lat: 47.5, lon: -120.5})
+        .zoomRange([0, 7])
+        .zoom(7)
+and pointed to a fake layer at:
+        .add(po.geoJson().url("http://localhost/cgi-bin/foo/{Z}/{X}/{Y}.json").id("state"))
+
+- Checked that apache access.log and saw the following:
+"GET /cgi-bin/foo/7/19/45.json 
+"GET /cgi-bin/foo/7/18/45.json
+"GET /cgi-bin/foo/7/18/44.json
+"GET /cgi-bin/foo/7/23/45.json
+"GET /cgi-bin/foo/7/22/45.json
+"GET /cgi-bin/foo/7/21/45.json
+"GET /cgi-bin/foo/7/23/44.json
+"GET /cgi-bin/foo/7/22/44.json
+"GET /cgi-bin/foo/7/20/44.json
+"GET /cgi-bin/foo/7/21/44.json
+"GET /cgi-bin/foo/7/19/44.json
+"GET /cgi-bin/foo/7/23/43.json
+"GET /cgi-bin/foo/7/22/43.json
+"GET /cgi-bin/foo/7/21/43.json
+"GET /cgi-bin/foo/7/20/43.json
+"GET /cgi-bin/foo/7/19/43.json
+"GET /cgi-bin/foo/7/18/43.json
+ 
+- So the key is to be able to convert those TMS addresses into Geographic bounding boxes. "What we need to do is take a layer request that contains a zoom level, an X and a Y coordinate and then somehow create a bounding box in our layer’s coordinate system (SRID 4326)." - http://geojason.info/tag/polymaps/
+
+- Python function below has the math to convert from TMS to lat/lon bbox coords
+
+# Imports
+import math
 
 
+# Functions
+def TileBounds(tx, ty, zoom):
+	# Returns bounds of the given tile in EPSG:4326 coordinates
+	
+	ty = ((1 << zoom) - ty - 1)
+	
+	# Pixels to Meters
+	# Converts pixel coordinates in given zoom level of pyramid to EPSG:900913
+	originShift = 20037508.342789244
+	# resolution = (meters/pixel) for given zoom level (measured at Equator)
+	resolution = 156543.03392804062 / (2**zoom)
+	minx_meters = ( tx * 256 ) * resolution - originShift
+	miny_meters = ( ty * 256 ) * resolution - originShift
+	maxx_meters = ( ( tx + 1 ) * 256 ) * resolution - originShift
+	maxy_meters = ( ( ty + 1 ) * 256 ) * resolution - originShift
 
+	# Meters to Lat/Lon
+	# Converts XY point from Spherical Mercator EPSG:900913 to lat/lon in WGS84 Datum
+	minx_ll = (minx_meters / originShift) * 180.0
+	miny_ll = (miny_meters / originShift) * 180.0
+	maxx_ll = (maxx_meters / originShift) * 180.0
+	maxy_ll = (maxy_meters / originShift) * 180.0
+	
+	miny_ll = 180 / math.pi * (2 * math.atan( math.exp( miny_ll * math.pi / 180.0)) - math.pi / 2.0)
+	maxy_ll = 180 / math.pi * (2 * math.atan( math.exp( maxy_ll * math.pi / 180.0)) - math.pi / 2.0)
+	
+	return Polygon(((minx_ll, miny_ll), (minx_ll, maxy_ll), (maxx_ll, maxy_ll), (maxx_ll, miny_ll),(minx_ll, miny_ll)))
 
+- Next we need to know how to format json:
+{"type":"FeatureCollection","features":[{"geometry":{"type":"Polygon","coordinates":[[[-89.137364,34.079458],[-88.830659,34.079458],[-88.721121,34.074921],[-88.721121,33.811394],[-88.934719,33.811394],[-88.934719,33.752216],[-89.038780,33.738554],[-89.192133,33.738554],[-89.192133,33.811394],[-89.137364,33.811394],[-89.137364,34.079458]]]},"type":"Feature","id":"county:28017","properties":{"name":"Chickasaw County"}},{"geometry":{"type":"Polygon","coordinates":[[[-85.999114,32.050918],[-85.895053,32.046276],[-85.884099,31.967323],[-85.790992,31.967323],[-85.790992,31.904412],[-86.185511,31.904412],[-86.190804,31.967323],[-85.993637,31.967323],[-85.999114,32.050918]]]}
+
+--------------------------
+Thu July 14, 2011:
+
+- Made good progress on both validating the TMS-to-bbox coords, and on the json format to serve for polgons.
+
+- Dummy cgi script to serve up some tile boundaries:
+#! /usr/bin/python
+
+# json_bbox.py
+
+print "Content-type: text/html\n\n"
+
+print '''{"type":"FeatureCollection",
+          "features":[{"geometry":{"type":"Polygon",
+                                   "coordinates":[[[-126.562500,45.089036],
+                                                   [-126.562500,47.040182],
+                                                   [-123.750000,47.040182],
+                                                   [-123.750000,45.089036],
+                                                   [-126.562500,45.089036]
+                                                 ]]
+                                  }
+                      },
+                      {"geometry":{"type":"Polygon",
+                                   "coordinates":[[[-129.375000,45.089036],
+                                                   [-129.375000,47.040182],
+                                                   [-126.562500,47.040182],
+                                                   [-126.562500,45.089036],
+                                                   [-129.375000,45.089036]
+                                                 ]]
+                                  }
+                      }
+                     ]}
+      '''
+
+- Added a map layer in my polymaps html file that points to dummy cgi and voila, I see a couple squares in my map view:
+        .add(po.geoJson().url("http://localhost/cgi-bin/json_bbox.py?tile={Z},{X},{Y}").id("bbox"))
+
+--------------------------
+Fri July 15, 2011:
+
+NOTE: 1st big challenge was to figure out a CGI request syntax that would work with my rudimentary scripting skills.
+
+- Need to write a cgi script that parses the TMS "GET" requests, ""GET /cgi-bin/json_bbox.py?tile=5,8,12".
+
+- Have a test script that parses a request like this, "GET /cgi-bin/table_cgi.py?fname=Roger&lname=Andre". Should be able to adapt it to extract TMS values.
 
 
 
