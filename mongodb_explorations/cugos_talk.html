@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
+<title></title>
+<style type="text/css">
+
+/**
+ * Alternate Sphinx design
+ * Originally created by Armin Ronacher for Werkzeug, adapted by Georg Brandl.
+ */
+
+body {
+    font-family: "Bitstream Vera Sans",'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    line-height: 150%;
+    text-align: center;
+    /*background-color: #AFC1C4; */
+    padding: 0;
+    /*
+    border: 1px solid #aaa;
+	  -moz-border-radius: 2px;
+	  -webkit-border-radius: 2px;
+	  */
+    margin: 0px 80px 0px 80px;
+    min-width: 740px;
+}
+
+a {
+    color: #647a8e;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2491CF;
+}
+
+pre {
+    font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    font-size: 0.95em;
+    letter-spacing: 0.015em;
+    padding: 0.5em;
+    background-color: #f8f8f8;
+  	border: 1px solid darkgrey;
+  	max-width: 95% !important;
+  	-webkit-box-shadow: 3px 3px 3px #666;
+  	overflow-x: auto;
+    padding: 10px;
+    display: block;   
+    margin-left: auto;   
+    margin-right: auto;
+}
+
+td.linenos pre {
+    padding: 0.5em 0;
+    border: 0;
+    background-color: transparent;
+    color: #aaa;
+}
+
+table.highlighttable {
+    margin-left: 0.5em;
+}
+
+table.highlighttable td {
+    padding: 0 0.5em 0 0.5em;
+}
+
+cite, code, tt {
+    font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    font-size: 0.95em;
+    letter-spacing: 0.01em;
+}
+
+hr {
+    border: 1px solid #abc;
+    margin: 2em;
+}
+
+tt {
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+tt.descname {
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 0;
+}
+
+tt.descclassname {
+    background-color: transparent;
+    border: 0;
+}
+
+tt.xref {
+    background-color: transparent;
+    font-weight: bold;
+    border: 0;
+}
+
+a tt {
+    background-color: transparent;
+    font-weight: bold;
+    border: 0;
+    color: #647a8e;
+}
+
+a tt:hover {
+    color: #2491CF;
+}
+
+dl {
+    margin-bottom: 15px;
+}
+
+dd p {
+    margin-top: 0px;
+}
+
+dd ul, dd table {
+    margin-bottom: 10px;
+}
+
+dd {
+    margin-top: 3px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+
+.refcount {
+    color: #060;
+}
+
+dt:target,
+/*.highlight*/ {
+    background-color: #fbe54e;
+}
+
+dl.class, dl.function {
+    border-top: 2px solid #888;
+}
+
+dl.method, dl.attribute {
+    border-top: 1px solid #aaa;
+}
+
+dl.glossary dt {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+pre {
+    line-height: 120%;
+}
+
+pre a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.first {
+    margin-top: 0 !important;
+}
+
+div.document {
+    background-color: #fbf8f5;
+    text-align: left;
+}
+
+/*
+div.documentwrapper {
+    width: 100%;
+}
+*/
+
+div.clearer {
+    clear: both;
+}
+
+div.related {
+    background-color: #CFDDE9;
+}
+
+div.related h3 {
+    display: none;
+}
+
+div.related ul {
+    height: 2em;
+    list-style: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    padding-left: 10px;
+}
+
+div.related ul li {
+    margin: 0;
+    padding: 0;
+    height: 2em;
+    float: left;
+}
+
+div.related ul li.right {
+    float: right;
+    margin-right: 5px;
+}
+
+div.related ul li a {
+    margin: 0;
+    padding: 0 5px 0 5px;
+    line-height: 1.75em;
+    color: #647a8e;
+}
+
+div.related ul li a:hover {
+    color: #3CA8E7;
+}
+
+div.body {
+    margin: 0;
+    padding: 0.5em 20px 20px 20px;
+}
+
+div.bodywrapper {
+    margin: 0 240px 0 0;
+    border-right: 1px solid #ccc;
+}
+
+div.body a {
+    text-decoration: underline;
+}
+
+div.sphinxsidebar {
+    margin: 0;
+    padding: 0.5em 15px 15px 0;
+    width: 210px;
+    float: right;
+    text-align: left;
+/*    margin-left: -100%; */
+}
+
+div.sphinxsidebar h4, div.sphinxsidebar h3 {
+    margin: 1em 0 0.5em 0;
+    font-size: 0.9em;
+    padding: 0.1em 0 0.1em 0.5em;
+    color: darkgreen;
+    border-left-color: #d9d953;
+    border-bottom-color: #d9d953;
+    border-right-color: #d9d953;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    border-bottom-width: 2px;
+    border-style: solid;
+    background: #e8eed8;
+	  -moz-border-radius: 2px;
+	  -webkit-border-radius: 2px;
+}
+
+div.sphinxsidebar ul {
+    padding-left: 1.5em;
+    margin-top: 7px;
+    list-style: none;
+    padding: 0;
+    line-height: 130%;
+}
+
+div.sphinxsidebar ul ul {
+    list-style: square;
+    margin-left: 20px;
+}
+
+p {
+    margin: 0.8em 0 0.5em 0;
+}
+
+p.rubric {
+    font-weight: bold;
+}
+
+h1 {
+    margin: 0;
+    padding: 0.7em 0 0.3em 0;
+    font-size: 2em;
+    color: #11557c;
+    text-align:center;
+}
+
+h2 {
+    color: #136392;
+    margin: 1.3em 0 0.2em 0;
+    font-size: 1.7em;
+    padding: 0;
+}
+
+h3 {
+    color: #11557c;
+    margin: 1em 0 -0.3em 0;
+    font-size: 1.2em;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: black!important;
+}
+
+h1 a.anchor, h2 a.anchor, h3 a.anchor, h4 a.anchor, h5 a.anchor, h6 a.anchor {
+    display: none;
+    margin: 0 0 0 0.3em;
+    padding: 0 0.2em 0 0.2em;
+    color: #aaa!important;
+}
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor,
+h5:hover a.anchor, h6:hover a.anchor {
+    display: inline;
+}
+
+h1 a.anchor:hover, h2 a.anchor:hover, h3 a.anchor:hover, h4 a.anchor:hover,
+h5 a.anchor:hover, h6 a.anchor:hover {
+    color: #777;
+    background-color: #eee;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0 -0.5em 0 -0.5em;
+    margin-left:auto; margin-right:auto;
+}
+
+table td, table th {
+    padding: 0.2em 0.5em 0.2em 0.5em;
+}
+
+div.footer {
+    background-color: #E3EFF1;
+    color: #86989B;
+    padding: 3px 8px 3px 0;
+    clear: both;
+    font-size: 0.8em;
+    text-align: center;
+	  -moz-border-radius: 2px;
+	  -webkit-border-radius: 2px;
+
+}
+
+div.footer a {
+    color: #86989B;
+    text-decoration: underline;
+}
+
+div.pagination {
+    margin-top: 2em;
+    padding-top: 0.5em;
+    border-top: 1px solid black;
+    text-align: center;
+}
+
+div.sphinxsidebar ul.toc {
+    margin: 1em 0 1em 0;
+    padding: 0 0 0 0.5em;
+    list-style: none;
+}
+
+div.sphinxsidebar ul.toc li {
+    margin: 0.5em 0 0.5em 0;
+    font-size: 0.9em;
+    line-height: 130%;
+}
+
+div.sphinxsidebar ul.toc li p {
+    margin: 0;
+    padding: 0;
+}
+
+div.sphinxsidebar ul.toc ul {
+    margin: 0.2em 0 0.2em 0;
+    padding: 0 0 0 1.8em;
+}
+
+div.sphinxsidebar ul.toc ul li {
+    padding: 0;
+}
+
+div.admonition, div.warning {
+    font-size: 0.9em;
+    margin: 1em 0 0 0;
+    border: 1px solid #86989B;
+    background-color: #f7f7f7;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    border-bottom-width: 2px;
+    border-style: solid;
+    background: #e8eed8;
+	  -moz-border-radius: 2px;
+	  -webkit-border-radius: 2px;
+
+}
+
+div.admonition p, div.warning p {
+    margin: 0.5em 1em 0.5em 1em;
+    padding: 0;
+}
+
+div.admonition pre, div.warning pre {
+    margin: 0.4em 1em 0.4em 1em;
+}
+
+div.admonition p.admonition-title,
+div.warning p.admonition-title {
+    margin: 0;
+    padding: 0.1em 0 0.1em 0.5em;
+    color: white;
+    border-bottom: 1px solid #86989B;
+    font-weight: bold;
+    background-color: #AFC1C4;
+}
+
+div.warning {
+    border: 1px solid #940000;
+}
+
+div.warning p.admonition-title {
+    background-color: #CF0000;
+    border-bottom-color: #940000;
+}
+
+div.admonition ul, div.admonition ol,
+div.warning ul, div.warning ol {
+    margin: 0.1em 0.5em 0.5em 3em;
+    padding: 0;
+}
+
+div.versioninfo {
+    margin: 1em 0 0 0;
+    border: 1px solid #ccc;
+    background-color: #DDEAF0;
+    padding: 8px;
+    line-height: 1.3em;
+    font-size: 0.9em;
+}
+
+
+a.headerlink {
+    color: #c60f0f!important;
+    font-size: 1em;
+    margin-left: 6px;
+    padding: 0 4px 0 4px;
+    text-decoration: none!important;
+    visibility: hidden;
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink,
+dt:hover > a.headerlink {
+    visibility: visible;
+}
+
+a.headerlink:hover {
+    background-color: steelblue;
+    color: white!important;
+}
+
+table.indextable td {
+    text-align: left;
+    vertical-align: top;
+}
+
+table.indextable dl, table.indextable dd {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+table.indextable tr.pcap {
+    height: 10px;
+}
+
+table.indextable tr.cap {
+    margin-top: 10px;
+    background-color: #f2f2f2;
+}
+
+img {
+    border: 0px;
+    padding: 20px;
+    display: block;   
+    margin-left: auto;   
+    margin-right: auto;
+}
+
+img.toggler {
+    margin-right: 3px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+img.inheritance {
+    border: 0px
+}
+
+form.pfform {
+    margin: 10px 0 20px 0;
+}
+
+table.contentstable {
+    width: 90%;
+}
+
+table.contentstable p.biglink {
+    line-height: 150%;
+}
+
+a.biglink {
+    font-size: 1.3em;
+}
+
+span.linkdescr {
+    font-style: italic;
+    padding-top: 5px;
+    font-size: 90%;
+}
+
+ul.search {
+    margin: 10px 0 0 20px;
+    padding: 0;
+}
+
+ul.search li {
+    padding: 5px 0 5px 20px;
+    background-image: url(file.png);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+}
+
+ul.search li a {
+    font-weight: bold;
+}
+
+ul.search li div.context {
+    color: #888;
+    margin: 2px 0 0 30px;
+    text-align: left;
+}
+
+ul.keywordmatches li.goodmatch a {
+    font-weight: bold;
+}
+
+
+</style>
+</head>
+<body>
+<div class="document">
+
+
+<div class="section" id="messing-about-with-mongodb-and-polymaps">
+<h1>Messing About with MongoDB (and Polymaps)</h1>
+<div class="section" id="why">
+<h2>Why?</h2>
+<ul class="simple">
+<li>Because they're different from the usual web mapping geospatial stack</li>
+<li>Because there's still a great deal of buzz about NoSQL databases</li>
+<li>Because I was curious about JSON tiles and CSS map styling</li>
+</ul>
+</div>
+<div class="section" id="why-mongodb">
+<h2>Why MongoDB?</h2>
+<ul class="simple">
+<li>Written in C++</li>
+<li>Uses a binary data storage format (BSON)</li>
+<li>Has rudimentary support for spatial data</li>
+<li>Saw Roger Bodamer from 10gen speak at a conference</li>
+</ul>
+</div>
+<div class="section" id="why-polymaps">
+<h2>Why Polymaps?</h2>
+<ul class="simple">
+<li>Like their philosophy about browsers</li>
+<li>Like their philosophy on map projections - Spherical Mercator is good enough!</li>
+<li>Wanted to explore the SVG display of JSON tiles</li>
+</ul>
+</div>
+<div class="section" id="so-what-s-the-goal">
+<h2>So what's the goal?</h2>
+<ul class="simple">
+<li>Polymaps map of U.S.A. Mountain Summits</li>
+<li>Data from Geographic Names Information System (GNIS)</li>
+<li>Data stored in MongoDB database</li>
+</ul>
+</div>
+<div class="section" id="mongo-stuff">
+<h2>Mongo Stuff</h2>
+<dl class="docutils">
+<dt><strong>1. Get data from http://geonames.usgs.gov/</strong></dt>
+<dd><ul class="first last">
+<li><p class="first">NationalFile_20110613.zip, contains 282 MB .txt file</p>
+</li>
+<li><dl class="first docutils">
+<dt>2,183,268 records that contain the following feature classes:</dt>
+<dd><p class="first last"><em>Airport Arch Area Arroyo Bar Basin Bay Beach Bench Bend Bridge Building Canal
+Cape Cemetery Census Channel Church Civil Cliff Crater Crossing Dam Falls Flat
+Forest Gap Glacier Gut Harbor Hospital Island Isthmus Lake Lava Levee Locale
+Military Mine Oilfield Park Pillar Plain Populated Place Post Office Range Rapids
+Reserve Reservoir Ridge School Sea Slope Spring Stream Summit Swamp Tower Trail
+Tunnel Valley Well Woods</em></p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Records look like this (some fields omitted for clarity):</dt>
+<dd><p class="first last"><strong>FEATURE_ID|FEATURE_NAME|FEATURE_CLASS|STATE_ALPHA|STATE_NUMERIC|COUNTY_NAME|COUNTY_NUMERIC|PRIM_LAT_DEC|PRIM_LONG_DEC|ELEV_IN_M|ELEV_IN_FT</strong>
+<strong>399|Agua Sal Creek|Stream|AZ|04|Apache|001|36.4611122|-109.4784394|1645|5397</strong></p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p><strong>2. Install MongoDB</strong> (I followed instructions for Ubuntu install at <a class="reference external" href="http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages">http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages</a>.)</p>
+<p>Start Mongodb as a daemon:</p>
+<pre class="literal-block">
+$ mongod --fork --dbpath /usr/local/mongodb/db/ --logpath /usr/local/mongodb/log/mongodb.log --logappend
+forked process\: 3018
+all output going to: /usr/local/mongodb/log/mongodb.log
+</pre>
+<p><strong>3. Create a new database:</strong></p>
+<p>Databases are created lazily the first time data is inserted.  In other words, if you specify the name of a DB and a collection that don't currently exist as part of your upload process, they will automatically be created for you.</p>
+<p><strong>(A brief segway into MongoDB structure)</strong></p>
+<p>MongoDB is a <em>document</em> database that contains <em>Collections</em>, so the structure looks like this:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Database = &quot;gnis&quot;</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Collection = &quot;names&quot;</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Document = json record:</dt>
+<dd><p class="first last"><strong>{_ID: 399, FEATURE_NAME: &quot;Agua Sal Creek&quot;, FEATURE_CLASS: &quot;Stream&quot;, STATE_ALPHA: &quot;AZ&quot;, STATE_FIPS: 04, COUNTY_NAME: &quot;Apache&quot;,</strong>
+<strong>COUNTY_FIPS: &quot;001&quot;, COORDS: [-109.4784394,36.4611122], ELEV_IN_FT: &quot;5397&quot;}</strong></p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>3. Upload records and create collection and database:</strong></p>
+<pre class="literal-block">
+$ mongoimport -h localhost -d gnis -c names --file mongo_gnis_upload.json --stopOnError
+</pre>
+<p><strong>4. Do a query to test that everything works as it should:</strong></p>
+<pre class="literal-block">
+$ mongo gnis
+MongoDB shell version: 1.8.2
+connecting to: gnis
+&gt; db.names.find({FEATURE_NAME: 'Mount Saint Helens', STATE_ALPHA: 'WA'})
+{ &quot;_id&quot; : ObjectId(&quot;4e262106d7a99b7db41a4919&quot;), &quot;_ID&quot; : 1525360, &quot;FEATURE_NAME&quot; : &quot;Mount Saint Helens&quot;, &quot;FEATURE_CLASS&quot; : &quot;Summit&quot;, &quot;STATE_ALPHA&quot; : &quot;WA&quot;, &quot;STATE_FIPS&quot; : 53, &quot;COUNTY_NAME&quot; : &quot;Skamania&quot;, &quot;COUNTY_FIPS&quot; : &quot;059&quot;, &quot;COORDS&quot; : [ -122.1944, 46.1912 ], &quot;ELEV_IN_FT&quot; : &quot;8356&quot; }
+</pre>
+</div>
+<div class="section" id="polymaps-stuff">
+<h2>Polymaps Stuff</h2>
+<p><strong>1. Sample of Polymaps JSON tile requests from apache access.log:</strong></p>
+<pre class="literal-block">
+&quot;GET /cgi-bin/foo/7/19/45.json
+&quot;GET /cgi-bin/foo/7/18/45.json
+&quot;GET /cgi-bin/foo/7/18/44.json
+&quot;GET /cgi-bin/foo/7/23/45.json
+&quot;GET /cgi-bin/foo/7/22/45.json
+&quot;GET /cgi-bin/foo/7/21/45.json
+&quot;GET /cgi-bin/foo/7/23/44.json
+&quot;GET /cgi-bin/foo/7/22/44.json
+&quot;GET /cgi-bin/foo/7/20/44.json
+&quot;GET /cgi-bin/foo/7/21/44.json
+&quot;GET /cgi-bin/foo/7/19/44.json
+&quot;GET /cgi-bin/foo/7/23/43.json
+&quot;GET /cgi-bin/foo/7/22/43.json
+&quot;GET /cgi-bin/foo/7/21/43.json
+&quot;GET /cgi-bin/foo/7/20/43.json
+&quot;GET /cgi-bin/foo/7/19/43.json
+&quot;GET /cgi-bin/foo/7/18/43.json
+</pre>
+<p><strong>2. Sample of what Polymaps expects in return:</strong></p>
+<pre class="literal-block">
+{&quot;type&quot;:&quot;FeatureCollection&quot;,
+        &quot;features&quot;:[{&quot;geometry&quot;:{&quot;type&quot;:&quot;Polygon&quot;,
+                                 &quot;coordinates&quot;:[[[-126.562500,45.089036],
+                                                 [-126.562500,47.040182],
+                                                 [-123.750000,47.040182],
+                                                 [-123.750000,45.089036],
+                                                 [-126.562500,45.089036]
+                                               ]]
+                                }
+                    },
+                    {&quot;geometry&quot;:{&quot;type&quot;:&quot;Polygon&quot;,
+                                 &quot;coordinates&quot;:[[[-129.375000,45.089036],
+                                                 [-129.375000,47.040182],
+                                                 [-126.562500,47.040182],
+                                                 [-126.562500,45.089036],
+                                                 [-129.375000,45.089036]
+                                               ]]
+                                }
+                    }
+                   ]
+}
+</pre>
+<p><strong>3. So the key is to convert the Z,X,Y TMS request into a lat/lon bounding box.  Here is a cgi script that does that, and returns the bbox as JSON polygons:</strong></p>
+<p><a class="reference external" href="https://github.com/lagerratrobe/mongomongo/blob/master/mongodb_explorations/tms_bbox.py">mongomongo/mongodb_explorations/tms_bbox.py</a>.</p>
+<p><strong>4. And this is what it looks like when you point Polymaps at that script:</strong></p>
+<p><a class="reference external" href="http://localhost/bbox_polymaps.html">Dynamic tile bbox layer</a>.</p>
+</div>
+<div class="section" id="back-to-mongodb-with-python-glue">
+<h2>Back to Mongodb, With Python Glue</h2>
+<p><strong>1. So now all we need to do is use the BBOX extents to do a spatial query in Mongo.</strong></p>
+<p>Query looks like this from the mongo shell:</p>
+<pre class="literal-block">
+$ mongo gnis
+MongoDB shell version: 1.8.2
+connecting to: gnis
+&gt; box = [[-126.562500,45.089036], [-123.750000,47.040182]]
+[ [ -126.5625, 45.089036 ], [ -123.75, 47.040182 ] ]
+&gt; db.names.find({&quot;COORDS&quot; : {&quot;$within&quot; : {&quot;$box&quot; : box}}, FEATURE_CLASS: &quot;Summit&quot;}, {FEATURE_NAME: 1, ELEV_IN_FT: 1})
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4146cec&quot;), &quot;FEATURE_NAME&quot; : &quot;Harlocker Hill&quot;, &quot;ELEV_IN_FT&quot; : &quot;0&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db414a349&quot;), &quot;FEATURE_NAME&quot; : &quot;Neskowin Crest&quot;, &quot;ELEV_IN_FT&quot; : &quot;194&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db414a105&quot;), &quot;FEATURE_NAME&quot; : &quot;Miles Mountain&quot;, &quot;ELEV_IN_FT&quot; : &quot;1220&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db414934a&quot;), &quot;FEATURE_NAME&quot; : &quot;Mount Gauldy&quot;, &quot;ELEV_IN_FT&quot; : &quot;2165&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4149d06&quot;), &quot;FEATURE_NAME&quot; : &quot;Little Hebo&quot;, &quot;ELEV_IN_FT&quot; : &quot;2270&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db41479b0&quot;), &quot;FEATURE_NAME&quot; : &quot;Alderman Butte&quot;, &quot;ELEV_IN_FT&quot; : &quot;121&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db414ab23&quot;), &quot;FEATURE_NAME&quot; : &quot;Round Top&quot;, &quot;ELEV_IN_FT&quot; : &quot;1099&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db41485a4&quot;), &quot;FEATURE_NAME&quot; : &quot;Buzzard Butte&quot;, &quot;ELEV_IN_FT&quot; : &quot;1683&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db414b009&quot;), &quot;FEATURE_NAME&quot; : &quot;South Point&quot;, &quot;ELEV_IN_FT&quot; : &quot;3133&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4149645&quot;), &quot;FEATURE_NAME&quot; : &quot;Mount Hebo&quot;, &quot;ELEV_IN_FT&quot; : &quot;3140&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4146c15&quot;), &quot;FEATURE_NAME&quot; : &quot;Green Hill&quot;, &quot;ELEV_IN_FT&quot; : &quot;331&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4147738&quot;), &quot;FEATURE_NAME&quot; : &quot;Balmer Hill&quot;, &quot;ELEV_IN_FT&quot; : &quot;486&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f7d7a99b7db4143c7a&quot;), &quot;FEATURE_NAME&quot; : &quot;Doty Hill&quot;, &quot;ELEV_IN_FT&quot; : &quot;1972&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4146c1e&quot;), &quot;FEATURE_NAME&quot; : &quot;Craig Mountain&quot;, &quot;ELEV_IN_FT&quot; : &quot;2008&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f7d7a99b7db4143fb0&quot;), &quot;FEATURE_NAME&quot; : &quot;Foley Peak&quot;, &quot;ELEV_IN_FT&quot; : &quot;2260&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f7d7a99b7db4144e49&quot;), &quot;FEATURE_NAME&quot; : &quot;Neahkahnie Mountain&quot;, &quot;ELEV_IN_FT&quot; : &quot;1598&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4147c78&quot;), &quot;FEATURE_NAME&quot; : &quot;Round Mountain&quot;, &quot;ELEV_IN_FT&quot; : &quot;764&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db4147a99&quot;), &quot;FEATURE_NAME&quot; : &quot;Double Peak&quot;, &quot;ELEV_IN_FT&quot; : &quot;978&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e2620f8d7a99b7db41463f0&quot;), &quot;FEATURE_NAME&quot; : &quot;Bald Mountain&quot;, &quot;ELEV_IN_FT&quot; : &quot;755&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;4e262115d7a99b7db420571c&quot;), &quot;FEATURE_NAME&quot; : &quot;Clark's Mountain&quot;, &quot;ELEV_IN_FT&quot; : &quot;1253&quot; }
+has more
+</pre>
+<p><strong>2. Use the Python API for MongoDB (pymongo) to take the BBOX we calculate from each TMS request and use it to query the database for summits in that BBOX:</strong></p>
+<p>Script that does this is <a class="reference external" href="https://github.com/lagerratrobe/mongomongo/blob/master/mongodb_explorations/gnis_summits.py">mongomongo/mongodb_explorations/gnis_summits.py</a>.</p>
+<p><strong>3. Put it all together in a map:</strong></p>
+<p><a class="reference external" href="http://localhost/summits_polymaps.html">GNIS Summits</a>.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>Next Steps</h2>
+<ul class="simple">
+<li>Scale dependent filtering of features</li>
+<li>Dynamic control of feature display from Web page</li>
+<li>More research on MongoDB <a class="reference external" href="http://www.mongodb.org/display/DOCS/Geospatial+Indexing">spatial querying capability</a>.</li>
+<li>Storage of lines and polygons in Mongo (Can we index these for spatial searches?)</li>
+<li>Performance optimization, cgi is probably alot slower than it could be</li>
+<li>Plugging MongoDB into GDAL and/or MapServer</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr class="footer" />
+Generated on: 2011-07-20.
+
+</div>
+</body>
+</html>
