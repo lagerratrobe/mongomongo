@@ -131,7 +131,7 @@ Polymaps Stuff
 
 **4. And this is what it looks like when you point Polymaps at that script:**
 
-`Dynamic tile bbox layer <http://localhost/bbox_polymaps.html>`_.
+`Dynamic tile bbox layer <http://www.macrogis.net/bbox_polymaps.html>`_.
 
 
 Back to Mongodb, With Python Glue
@@ -175,7 +175,7 @@ Script that does this is `mongomongo/mongodb_explorations/gnis_summits.py <https
 
 **3. Put it all together in a map:** 
 
-`GNIS Summits <http://localhost/summits_polymaps.html>`_.
+`GNIS Summits <http://www.macrogis.net/summits_polymaps.html>`_.
 
 Next Steps
 ----------
